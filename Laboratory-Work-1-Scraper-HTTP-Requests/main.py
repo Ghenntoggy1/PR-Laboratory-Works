@@ -37,8 +37,10 @@ if __name__ == '__main__':
         for feature in feature_soup:
             feature_text = feature.text.strip()
             if "Tehnologie de fabricație" in feature_text:
-                phone["description"] = re.sub(r"\s+", " ", feature_text.replace("Tehnologie de fabricație",
-                                                                                "Fabrication Technology"))
+                print(feature_text)
+                description = re.sub(r"\s+", " ", feature_text.replace("Tehnologie de fabricație", "Fabrication Technology"))
+                phone["description"] = description
+                break
             else:
                 phone["description"] = "Fabrication Technology: Not Available"
         phone_entity = PhoneEntity(phone.get("href"), phone.get("title"), phone.get("price_currency"), phone.get("description"))
