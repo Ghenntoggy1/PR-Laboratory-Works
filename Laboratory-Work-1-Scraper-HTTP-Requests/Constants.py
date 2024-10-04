@@ -8,3 +8,11 @@ class Constants:
         "Cookie": COOKIE
     }
     PARSER_TYPE = "html.parser"
+    EXCHANGE_RATES = {
+        ("MDL", "EUR"): 1 / 19.5,
+        ("EUR", "MDL"): 19.5,
+        ("MDL", "USD"): 1 / 17.8,
+        ("USD", "MDL"): 17.8,
+        ("EUR", "USD"): 1.05,
+        ("USD", "EUR"): 1 / 1.05
+    }

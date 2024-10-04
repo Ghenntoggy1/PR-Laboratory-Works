@@ -36,6 +36,8 @@ if __name__ == '__main__':
         feature_soup: list = web_scraper.get_tag_from_soup(soup_phone.find("div", class_="main-description"), "li", class_name="char_all")
         for feature in feature_soup:
             feature_text = feature.text.strip()
+
+            # POINT 5 - VALIDATION OF DESCRIPTION
             if "Tehnologie de fabricație" in feature_text:
                 print(feature_text)
                 description = re.sub(r"\s+", " ", feature_text.replace("Tehnologie de fabricație", "Fabrication Technology"))
