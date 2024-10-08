@@ -10,3 +10,7 @@ class PhoneEntity:
 
     def __repr__(self):
         return f"PhoneEntity({self.url}, {self.title}, {self.price}, {self.description})"
+
+    def __str__(self):
+        return (f"Phone {self.title} with price: {self.price.get('price')} {self.price.get('currency')}"
+                f" and description: {self.description}")

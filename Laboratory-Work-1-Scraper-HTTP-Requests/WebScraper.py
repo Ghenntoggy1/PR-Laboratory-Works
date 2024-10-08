@@ -22,7 +22,6 @@ class WebScraper(ABC):
 
     # POINT 3 - USE OF BEAUTIFULSOUP TO PARSE HTML CONTENT
     def get_soup_from_html(self, html: str) -> BeautifulSoup:
-        print(html)
         return BeautifulSoup(html, Constants.PARSER_TYPE)
 
     def get_tag_from_soup(self, soup: BeautifulSoup, tag: str, class_name: str = None) -> list:

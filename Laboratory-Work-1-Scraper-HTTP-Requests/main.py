@@ -1,4 +1,6 @@
 import json
+import re
+from json import JSONDecodeError
 from urllib.request import Request
 from Phone import PhoneEntity
 from bs4 import BeautifulSoup
@@ -20,17 +22,23 @@ def start_process(web_scraper: WebScraper) -> FilteredPhones:
     phones: list[PhoneEntity] = []
     for item in set_items:
         phone: dict = web_scraper.get_attributes_from_tag(item, "href", "title")
+        if phone.get("href") in [phone_entity.url for phone_entity in phones]:
+            continue
         data_ga4: str = item["data-ga4"]
-        str_price: str = json.loads(data_ga4)["ecommerce"]["value"]
-
+        try:
+            str_price: str = json.loads(data_ga4)["ecommerce"]["value"]
+            currency: str = json.loads(data_ga4)["ecommerce"]["currency"]
+        except JSONDecodeError:
+            str_price = re.search(r'"value":(\d+)', data_ga4).group(1)
+            currency = re.search(r'"currency":"(\w+)"', data_ga4).group(1)
         # POINT 5 - VALIDATION OF PRICE
         price = price_str_to_float(str_price)
 
-        price_currency = construct_price_currency(price, json.loads(data_ga4)["ecommerce"]["currency"])
+        price_currency = construct_price_currency(price, currency)
         phone["price_currency"] = price_currency
 
         # Point 4 - SCRAP HREF AND ADD AN ATTRIBUTE TO PHONE
-        request: Request = web_scraper.create_request(custom_url=phone["href"])
+        request = web_scraper.create_request(custom_url=phone["href"])
         html_text_phone: str = web_scraper.get_html_from_url(request)
         soup_phone: BeautifulSoup = web_scraper.get_soup_from_html(html_text_phone)
         feature_soup: list = web_scraper.get_tag_from_soup(soup_phone.find("div", class_="main-description"),
@@ -60,8 +68,10 @@ def start_process(web_scraper: WebScraper) -> FilteredPhones:
 
 
 if __name__ == '__main__':
-    # urllib_web_scraper: UrllibHTMLRequester = UrllibHTMLRequester()
-    # start_process(urllib_web_scraper)
+    print("Web Scraping with Urllib")
+    urllib_web_scraper: UrllibHTMLRequester = UrllibHTMLRequester()
+    start_process(urllib_web_scraper)
 
+    print("Web Scraping with TLS")
     tls_web_scraper: TLSHTMLRequester = TLSHTMLRequester()
     start_process(tls_web_scraper)

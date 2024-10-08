@@ -57,7 +57,6 @@ def filter_phones(min_price: float, max_price: float, phone_list: list) -> list:
 
 # POINT 6 - SUM PRICES
 def sum_prices(phone_list: list) -> float:
-    print("Sum of prices of the Products")
     if not phone_list:
         print("No phones to sum")
         return 0.0

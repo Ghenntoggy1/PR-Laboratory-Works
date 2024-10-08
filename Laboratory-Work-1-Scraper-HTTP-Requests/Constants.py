@@ -6,7 +6,8 @@ class Constants:
     HOST = "darwin.md"
     HEADERS = {
         "User-Agent": USER_AGENT,
-        "Cookie": COOKIE
+        "Cookie": COOKIE,
+        "Content-Type": "text/html; charset=UTF-8"
     }
     PARSER_TYPE = "html.parser"
     EXCHANGE_RATES = {
