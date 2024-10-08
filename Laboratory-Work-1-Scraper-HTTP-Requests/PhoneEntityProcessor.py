@@ -3,6 +3,7 @@ from CurrencyConvertor import CurrencyConvertor
 import functools
 from Phone import PhoneEntity
 
+
 # POINT 5 - VALIDATION OF PRICE
 def price_str_to_float(price_str: str) -> float:
     try:
@@ -40,6 +41,7 @@ def switch_currency(phone_entity_list: list, new_currency: str) -> list:
         phone_entity.price["price"] = new_price
         phone_entity.price["currency"] = new_currency
         return phone_entity
+
     phone_entity_list = list(map(convert_phone_currency, phone_entity_list))
     return phone_entity_list
 
@@ -81,12 +83,112 @@ def serialize_list_phones_JSON(phones: list[PhoneEntity]) -> bytearray:
     return bytearray(phone_str.encode("utf-8"))
 
 
-# def deserialize_phone_JSON(phone_bytearray: bytearray) -> PhoneEntity:
-#     phone_str = phone_bytearray.decode("utf-8")
-#     phone_dict = eval(phone_str)
-#     phone = PhoneEntity(phone_dict["url"], phone_dict["title"], phone_dict["price"], phone_dict["description"])
-#     return phone
-#
-#
-# def deserialize_list_phones_JSON(phones_bytearray: bytearray) -> list[PhoneEntity]:
-#     pass
+def serialize_phone_XML(phone: PhoneEntity) -> bytearray:
+    phone_str = (f'<phone>'
+                 f'<url>{phone.url}</url>'
+                 f'<title>{phone.title}</title>'
+                 f'<priceTag>'
+                 f'<currency>{phone.price.get("currency")}</currency>'
+                 f'<price>{phone.price.get("price")}</price>'
+                 f'</priceTag>'
+                 f'<description>{phone.description}</description>'
+                 f'</phone>')
+    return bytearray(phone_str.encode("utf-8"))
+
+
+def serialize_list_phones_XML(phones: list[PhoneEntity]) -> bytearray:
+    phone_str = f'<phones>{"".join([serialize_phone_XML(phone).decode("utf-8") for phone in phones])}</phones>'
+    return bytearray(phone_str.encode("utf-8"))
+
+
+def serialize_phone_LINERS(phone: PhoneEntity) -> bytearray:
+    phone_str = (f'|= '
+                 f'|+ url - {phone.url} +| '
+                 f'|+ title - {phone.title} +| '
+                 f'|+ priceObj - |= '
+                 f'|+ currency - {phone.price.get("currency")} +| '
+                 f'|+ price - {phone.price.get("price")} +| '
+                 f'=| +| '
+                 f'|+ description - {phone.description} +| =|')
+    print(phone_str)
+    return bytearray(phone_str.encode("utf-8"))
+
+
+def serialize_list_phones_LINERS(phones: list[PhoneEntity]) -> bytearray:
+    phone_str = f'[{"!".join([serialize_phone_LINERS(phone).decode("utf-8") for phone in phones])}]'
+    return bytearray(phone_str.encode("utf-8"))
+
+def deserialize_phone_LINERS(phone_str: bytearray) -> PhoneEntity:
+    # Decode bytearray to string
+    data_str = phone_str.decode("utf-8")
+
+    # |= =| delimiter
+    dict_str = {}
+    object_str = data_str[data_str.find("|= ") + 3:-1]
+    start_index = object_str.find("|+ ") + 3
+    end_index = object_str.find(" - ", start_index)
+    prev_key = ""
+    while start_index < len(object_str):
+        old_copy = dict_str.copy()
+        if prev_key.endswith("Obj"):
+            key = prev_key
+        else:
+            key = object_str[start_index:end_index].replace(" ", "")
+        if object_str.find(" +|", end_index + 3) < object_str.find(" |=", end_index + 3) or not key.endswith("Obj"):
+            start_index = end_index + 3
+            end_index = object_str.find(" +|", start_index)
+            value = object_str[start_index:end_index]
+            dict_str[key] = value
+            start_index = object_str.find("|+ ", end_index + 3) + 3
+            end_index = object_str.find(" - ", start_index)
+            if old_copy == dict_str:
+                break
+        elif object_str.find(" |=", end_index + 3) < object_str.find(" +|", end_index + 3):
+            flag = True
+            if object_str.find(" |=", end_index + 3) == -1:
+                if object_str[object_str.find("|+ ", end_index + 3) + 3:object_str.find(" - ", start_index)] == prev_key:
+                    start_index = object_str.find("|+ ", end_index + 3) + 3
+                    end_index = object_str.find(" - ", start_index)
+                else:
+                    flag = False
+                    pass
+            else:
+                start_index = object_str.find(" |+", end_index + 3) + 3
+                end_index = object_str.find(" - ", start_index)
+            inner_key = object_str[start_index:end_index]
+            start_index = object_str.find(" - ", end_index) + 3
+            end_index = object_str.find(" +|", start_index)
+            inner_value = object_str[start_index:end_index]
+            if key in dict_str:
+                dict_str[key][inner_key] = inner_value
+            else:
+                dict_str[key] = {}
+                dict_str[key][inner_key] = inner_value
+            start_index = object_str.find("|+ ", end_index) + 3
+            end_index = object_str.find(" - ", start_index)
+            if flag:
+                prev_key = key
+            else:
+                prev_key = ""
+        else:
+            dict_str[key] = {}
+            start_index = object_str.find("|+", start_index) + 3
+            end_index = object_str.find(" - ", start_index)
+            inner_object_str = object_str[start_index:end_index]
+
+    # Create and return PhoneEntity
+    return PhoneEntity(url=dict_str.get("url"), title=dict_str.get("title"), price=dict_str.get("priceObj"), description=dict_str.get("description"))
+
+
+def deserialize_list_phones_LINERS(phones_str: bytearray) -> list[PhoneEntity]:
+    # Decode bytearray to string
+    data_str = phones_str.decode("utf-8")
+    data_str_list = data_str.split("!")
+    phones = []
+    for data in data_str_list:
+        phone_data = deserialize_phone_LINERS(bytearray(data.encode("utf-8")))
+        phone_entity = PhoneEntity(url=phone_data.url, title=phone_data.title, price=phone_data.price, description=phone_data.description)
+        phones.append(phone_entity)
+        print(phone_entity)
+    return phones
+

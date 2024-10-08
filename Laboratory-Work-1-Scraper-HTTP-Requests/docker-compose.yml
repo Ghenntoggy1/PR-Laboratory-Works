@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  lab1-http-server:
+    image: nicug/server-pr-lab1:latest
+    ports:
+      - "8000:8000" # Connect the port 8000 on your computer to port 8000 in the container
+    environment: # Set environment variables
+      - PORT=8000

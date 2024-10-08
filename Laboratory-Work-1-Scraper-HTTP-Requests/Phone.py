@@ -6,7 +6,7 @@ class PhoneEntity:
         self.url = url
         self.title = title
         self.price = price
-        self.description = re.sub(" : ", ":", description)
+        self.description = description.replace(" : ", ":")
 
     def __repr__(self):
         return f"PhoneEntity({self.url}, {self.title}, {self.price}, {self.description})"

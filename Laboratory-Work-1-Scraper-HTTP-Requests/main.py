@@ -49,6 +49,8 @@ def start_process(web_scraper: WebScraper) -> tuple[FilteredPhones, list[PhoneEn
                                    phone.get("description"))
         phones.append(phone_entity)
         print(phone_entity)
+        # # TODO DELETE
+        # break
 
     # POINT 6 - SWITCH CURRENCY, FILTER BY PRICE
     new_currency = "EUR"
@@ -69,17 +71,39 @@ def start_process(web_scraper: WebScraper) -> tuple[FilteredPhones, list[PhoneEn
 
 
 if __name__ == '__main__':
-    print("Web Scraping with Urllib")
-    urllib_web_scraper: UrllibHTMLRequester = UrllibHTMLRequester()
-    filtered_phones, all_phones = start_process(urllib_web_scraper)
+    # print("Web Scraping with Urllib")
+    # urllib_web_scraper: UrllibHTMLRequester = UrllibHTMLRequester()
+    # filtered_phones, all_phones = start_process(urllib_web_scraper)
 
     print("Web Scraping with TLS")
     tls_web_scraper: TCPHTMLRequester = TCPHTMLRequester()
     filtered_phones_TCP, all_phones_TCP = start_process(tls_web_scraper)
-    print("SERIALIZED JSON OBJECTS")
-    for phone in all_phones_TCP:
-        phone_json_serialized = serialize_phone_JSON(phone)
-        print(phone_json_serialized)
+    # print("SERIALIZED JSON OBJECTS")
+    # for phone in all_phones_TCP:
+    #     phone_json_serialized = serialize_phone_JSON(phone)
+    #     print(phone_json_serialized)
+    #
+    # print("SERIALIZED JSON LIST OBJECTS")
+    # print(serialize_list_phones_JSON(all_phones_TCP))
 
-    print("SERIALIZED JSON OBJECTS")
-    print(serialize_list_phones_JSON(all_phones_TCP))
+    # print("SERIALIZED XML OBJECTS")
+    # for phone in all_phones_TCP:
+    #     phone_xml_serialized = serialize_phone_XML(phone)
+    #     print(phone_xml_serialized)
+    #
+    # print("SERIALIZED XML LIST OBJECTS")
+    # print(serialize_list_phones_XML(all_phones_TCP))
+    #
+    # print("SERIALIZED LINERS OBJECTS")
+    # for phone in all_phones_TCP:
+    #     phone_liners_serialized = serialize_phone_LINERS(phone)
+    #     print(phone_liners_serialized)
+
+    print("SERIALIZED LINERS LIST OBJECTS")
+    print(serialize_list_phones_LINERS(all_phones_TCP))
+
+    # print("DESERIALIZED LINERS OBJECT")
+    # print(deserialize_phone_LINERS(serialize_phone_LINERS(all_phones_TCP[0])))
+
+    print("DESERIALIZED LINERS LIST OBJECTS")
+    print(deserialize_list_phones_LINERS(serialize_list_phones_LINERS(all_phones_TCP)))
