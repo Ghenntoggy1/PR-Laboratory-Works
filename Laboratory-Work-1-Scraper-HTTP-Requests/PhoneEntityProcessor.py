@@ -144,16 +144,45 @@ def serialize_list_phones_XML(phones: list[PhoneEntity]) -> bytearray:
     return bytearray(phone_str.encode("utf-8"))
 
 
-def serialize_phone_LINERS(phone: PhoneEntity) -> bytearray:
-    phone_str = (f'|= '
-                 f'|+ url - {phone.url} +| '
-                 f'|+ title - {phone.title} +| '
-                 f'|+ priceObj - |= '
-                 f'|+ currency - {phone.price.get("currency")} +| '
-                 f'|+ price - {phone.price.get("price")} +| '
-                 f'=| +| '
-                 f'|+ description - {phone.description} +| =|')
-    print(phone_str)
+def serialize_phone_LINERS(object) -> bytearray:
+    # Method 1:
+    # phone_str = (f'|= '
+    #              f'|+ url - {phone.url} +| '
+    #              f'|+ title - {phone.title} +| '
+    #              f'|+ priceObj - |= '
+    #              f'|+ currency - {phone.price.get("currency")} +| '
+    #              f'|+ price - {phone.price.get("price")} +| '
+    #              f'=| +| '
+    #              f'|+ description - {phone.description} +| =|')
+    #
+    # Method 2:
+    phone_str = ""
+    if isinstance(object, dict):
+        elements = []
+        phone_str = "|= "
+        for key, value in object.items():
+            if key == "price_currency":
+                elements.append(f'|+ priceObj - {serialize_phone_LINERS(value).decode("utf-8")} +| ')
+            else:
+                elements.append(f'|+ {key} - {serialize_phone_LINERS(value).decode("utf-8")} +| ')
+        phone_str += "".join(elements)
+        phone_str += "=|"
+    elif isinstance(object, list):
+        phone_str = "["
+        phone_str += "!".join([serialize_phone_LINERS(item).decode("utf-8") for item in object])
+        # for item in object:
+        #     phone_str += serialize_phone_LINERS(item).decode("utf-8")
+        #     phone_str += "!"
+        phone_str += "]"
+    elif isinstance(object, str):
+        phone_str = object
+    elif isinstance(object, (int, float)):
+        phone_str = str(object)
+    elif isinstance(object, bool):
+        phone_str = "true" if object else "false"
+    elif object is None:
+        phone_str = ""
+
     return bytearray(phone_str.encode("utf-8"))
 
 

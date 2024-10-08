@@ -107,11 +107,14 @@ if __name__ == '__main__':
 
     print("SERIALIZED LINERS OBJECTS")
     for phone in all_phones_TCP:
-        phone_liners_serialized = serialize_phone_LINERS(phone)
+        phone_liners_serialized = serialize_phone_LINERS(phone.__dict__())
         print(phone_liners_serialized)
 
     print("SERIALIZED LINERS LIST OBJECTS")
-    serialized_linears_phones = serialize_list_phones_LINERS(all_phones_TCP)
+    phone_dicts = []
+    for phone in all_phones_TCP:
+        phone_dicts.append(phone.__dict__())
+    serialized_linears_phones = serialize_phone_LINERS(phone_dicts)
     print(serialized_linears_phones)
     print(type(serialized_linears_phones))
 
