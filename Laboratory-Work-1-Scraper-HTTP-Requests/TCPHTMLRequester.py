@@ -1,14 +1,11 @@
-import re
 import socket
 import ssl
-from re import Match
-from urllib.request import Request
 
 from Constants import Constants
 from WebScraper import WebScraper
 
 
-class TLSHTMLRequester(WebScraper):
+class TCPHTMLRequester(WebScraper):
     def __init__(self, host: str = Constants.HOST, port: int = Constants.PORT):
         super().__init__()
         self.port = port

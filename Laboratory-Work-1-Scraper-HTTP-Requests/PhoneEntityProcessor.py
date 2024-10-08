@@ -3,7 +3,6 @@ from CurrencyConvertor import CurrencyConvertor
 import functools
 from Phone import PhoneEntity
 
-
 # POINT 5 - VALIDATION OF PRICE
 def price_str_to_float(price_str: str) -> float:
     try:
@@ -66,3 +65,28 @@ def sum_prices(phone_list: list) -> float:
         map(lambda phone: phone.price.get("price"), phone_list)
     )
 
+
+def serialize_phone_JSON(phone: PhoneEntity) -> bytearray:
+    phone_str = (f'{{'
+                 f'"url": "{phone.url}", '
+                 f'"title": "{phone.title}", '
+                 f'"price": {phone.price}, '
+                 f'"description": "{phone.description}"'
+                 f'}}')
+    return bytearray(phone_str.encode("utf-8"))
+
+
+def serialize_list_phones_JSON(phones: list[PhoneEntity]) -> bytearray:
+    phone_str = f'[{", ".join([serialize_phone_JSON(phone).decode("utf-8") for phone in phones])}]'
+    return bytearray(phone_str.encode("utf-8"))
+
+
+# def deserialize_phone_JSON(phone_bytearray: bytearray) -> PhoneEntity:
+#     phone_str = phone_bytearray.decode("utf-8")
+#     phone_dict = eval(phone_str)
+#     phone = PhoneEntity(phone_dict["url"], phone_dict["title"], phone_dict["price"], phone_dict["description"])
+#     return phone
+#
+#
+# def deserialize_list_phones_JSON(phones_bytearray: bytearray) -> list[PhoneEntity]:
+#     pass

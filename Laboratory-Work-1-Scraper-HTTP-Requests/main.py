@@ -1,20 +1,21 @@
 import json
 import re
 from json import JSONDecodeError
+from typing import Tuple, List
 from urllib.request import Request
 from Phone import PhoneEntity
 from bs4 import BeautifulSoup
 from CurrencyConvertor import construct_price_currency
 from UrllibHTMLRequester import UrllibHTMLRequester
-from PhoneEntityProcessor import price_str_to_float, validate_description, switch_currency, filter_phones, sum_prices
+from PhoneEntityProcessor import *
 from WebScraper import WebScraper
-from TLSHTMLRequester import TLSHTMLRequester
+from TCPHTMLRequester import TCPHTMLRequester
 from datetime import timezone
 import datetime
 from FilteredPhones import FilteredPhones
 
 
-def start_process(web_scraper: WebScraper) -> FilteredPhones:
+def start_process(web_scraper: WebScraper) -> tuple[FilteredPhones, list[PhoneEntity]]:
     html_text: str = web_scraper.get_html_from_url()
     soup: BeautifulSoup = web_scraper.get_soup_from_html(html_text)
     items: list = web_scraper.get_tag_from_soup(soup, "a", "ga-item")
@@ -52,7 +53,7 @@ def start_process(web_scraper: WebScraper) -> FilteredPhones:
     # POINT 6 - SWITCH CURRENCY, FILTER BY PRICE
     new_currency = "EUR"
     phones = switch_currency(phones, new_currency)
-
+    all_phones_TCP = phones.copy()
     min_price = 300
     max_price = 350
     phones = filter_phones(min_price, max_price, phones)
@@ -64,14 +65,21 @@ def start_process(web_scraper: WebScraper) -> FilteredPhones:
     print("UTC Timestamp:", utc_timestamp)
     filtered_phones = FilteredPhones(phones, sum_prices(phones), utc_timestamp)
     print(filtered_phones.__repr__())
-    return filtered_phones
+    return filtered_phones, all_phones_TCP
 
 
 if __name__ == '__main__':
     print("Web Scraping with Urllib")
     urllib_web_scraper: UrllibHTMLRequester = UrllibHTMLRequester()
-    start_process(urllib_web_scraper)
+    filtered_phones, all_phones = start_process(urllib_web_scraper)
 
     print("Web Scraping with TLS")
-    tls_web_scraper: TLSHTMLRequester = TLSHTMLRequester()
-    start_process(tls_web_scraper)
+    tls_web_scraper: TCPHTMLRequester = TCPHTMLRequester()
+    filtered_phones_TCP, all_phones_TCP = start_process(tls_web_scraper)
+    print("SERIALIZED JSON OBJECTS")
+    for phone in all_phones_TCP:
+        phone_json_serialized = serialize_phone_JSON(phone)
+        print(phone_json_serialized)
+
+    print("SERIALIZED JSON OBJECTS")
+    print(serialize_list_phones_JSON(all_phones_TCP))
