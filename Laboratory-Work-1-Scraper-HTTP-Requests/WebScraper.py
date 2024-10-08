@@ -1,37 +1,28 @@
 # Web Scraper class
 import json
+from abc import abstractmethod, ABC
 
 import requests
-
 from Constants import Constants
 from urllib.request import urlopen, Request
 from bs4 import BeautifulSoup
 
 
-class WebScraper:
+class WebScraper(ABC):
     def __init__(self):
         self.url = Constants.URL_WEBSITE
 
-    def create_request(self, custom_url: str = Constants.URL_WEBSITE, custom_headers=Constants.HEADERS) -> Request:
-        return Request(
-            url=custom_url,
-            headers=custom_headers
-        )
+    @abstractmethod
+    def create_request(self, custom_url: str, custom_headers):
+        pass
 
-    def get_html_from_url(self, request: Request = None) -> str:
-        # POINT 2 - GET REQUEST TO DARWIN PHONES PAGE
-        # respone = requests.get(url=self.url, headers=Constants.HEADERS)
-        # html_bytes = respone.content
-        if request is None:
-            request = self.create_request()
-
-        # USE ANOTHER LIBRARY
-        page = urlopen(request)
-        html_bytes = page.read()
-        return html_bytes.decode(Constants.DECODE_FORMAT)
+    @abstractmethod
+    def get_html_from_url(self, request = None) -> str:
+        pass
 
     # POINT 3 - USE OF BEAUTIFULSOUP TO PARSE HTML CONTENT
     def get_soup_from_html(self, html: str) -> BeautifulSoup:
+        print(html)
         return BeautifulSoup(html, Constants.PARSER_TYPE)
 
     def get_tag_from_soup(self, soup: BeautifulSoup, tag: str, class_name: str = None) -> list:

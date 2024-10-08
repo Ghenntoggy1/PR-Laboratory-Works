@@ -6,7 +6,6 @@ class PhoneEntity:
         self.url = url
         self.title = title
         self.price = price
-        # POINT
         self.description = re.sub(" : ", ":", description)
 
     def __repr__(self):
