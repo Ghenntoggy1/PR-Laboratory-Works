@@ -14,3 +14,11 @@ class PhoneEntity:
     def __str__(self):
         return (f"Phone {self.title} with price: {self.price.get('price')} {self.price.get('currency')}"
                 f" and description: {self.description}")
+
+    def __dict__(self):
+        return {
+            "url": self.url,
+            "title": self.title,
+            "price_currency": self.price,
+            "description": self.description
+        }

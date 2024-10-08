@@ -68,31 +68,74 @@ def sum_prices(phone_list: list) -> float:
     )
 
 
-def serialize_phone_JSON(phone: PhoneEntity) -> bytearray:
-    phone_str = (f'{{'
-                 f'"url": "{phone.url}", '
-                 f'"title": "{phone.title}", '
-                 f'"price": {phone.price}, '
-                 f'"description": "{phone.description}"'
-                 f'}}')
+def serialize_phone_JSON(object) -> bytearray:
+    # METHOD 1:
+    # phone_str = (f'{{"url": "{phone.url}", '
+    #              f'"title": "{phone.title}", '
+    #              f'"priceTag": {{"currency": "{phone.price.get("currency")}", "price": {phone.price.get("price")}}}, '
+    #              f'"description": "{phone.description}"}}')
+
+    # METHOD 2:
+    phone_str = ""
+
+    if isinstance(object, dict):
+        pairs = []
+        for key, value in object.items():
+            pairs.append(f'{serialize_phone_JSON(key).decode("utf-8")}:{serialize_phone_JSON(value).decode("utf-8")}')
+        phone_str = "{" + ", ".join(pairs) + "}"
+    elif isinstance(object, list):
+        items = [serialize_phone_JSON(item).decode("utf-8") for item in object]
+        phone_str = "[" + ",".join(items) + "]"
+    elif isinstance(object, str):
+        phone_str = f'"{object}"'
+    elif isinstance(object, (int, float)):
+        phone_str = str(object)
+    elif isinstance(object, bool):
+        phone_str = "true" if object else "false"
+    elif object is None:
+        phone_str = "null"
+
     return bytearray(phone_str.encode("utf-8"))
 
 
 def serialize_list_phones_JSON(phones: list[PhoneEntity]) -> bytearray:
-    phone_str = f'[{", ".join([serialize_phone_JSON(phone).decode("utf-8") for phone in phones])}]'
-    return bytearray(phone_str.encode("utf-8"))
+    phone_str = serialize_phone_JSON(phones)
+    return phone_str
 
 
-def serialize_phone_XML(phone: PhoneEntity) -> bytearray:
-    phone_str = (f'<phone>'
-                 f'<url>{phone.url}</url>'
-                 f'<title>{phone.title}</title>'
-                 f'<priceTag>'
-                 f'<currency>{phone.price.get("currency")}</currency>'
-                 f'<price>{phone.price.get("price")}</price>'
-                 f'</priceTag>'
-                 f'<description>{phone.description}</description>'
-                 f'</phone>')
+def serialize_phone_XML(object) -> bytearray:
+    # Method 1:
+    # phone_str = (f'<phone>'
+    #              f'<url>{phone.url}</url>'
+    #              f'<title>{phone.title}</title>'
+    #              f'<priceTag>'
+    #              f'<currency>{phone.price.get("currency")}</currency>'
+    #              f'<price>{phone.price.get("price")}</price>'
+    #              f'</priceTag>'
+    #              f'<description>{phone.description}</description>'
+    #              f'</phone>')
+
+    # Method 2:
+    phone_str = ""
+    if isinstance(object, dict):
+        tags = []
+        for key, value in object.items():
+            tags.append(f'<{key}>{serialize_phone_XML(value).decode("utf-8")}</{key}>')
+        phone_str = "<phone>" + "".join(tags) + "</phone>"
+    elif isinstance(object, list):
+        phone_str = "<phones>"
+        for item in object:
+            phone_str += serialize_phone_XML(item).decode("utf-8")
+        phone_str += "</phones>"
+    elif isinstance(object, str):
+        phone_str = object
+    elif isinstance(object, (int, float)):
+        phone_str = str(object)
+    elif isinstance(object, bool):
+        phone_str = "true" if object else "false"
+    elif object is None:
+        phone_str = ""
+
     return bytearray(phone_str.encode("utf-8"))
 
 
