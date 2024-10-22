@@ -1,11 +1,10 @@
 from Constants import Constants
+from Phone import Price
 
 
-def construct_price_currency(price: float, currency: str) -> dict[str, float]:
-    return {
-        "currency": currency,
-        "price": price
-    }
+def construct_price_currency(price: float, currency: str) -> Price:
+    price_obj = Price(price=price, currency=currency)
+    return price_obj
 
 
 class CurrencyConvertor:

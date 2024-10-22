@@ -7,7 +7,7 @@ class UrllibHTMLRequester(WebScraper):
     def __init__(self):
         super().__init__()
 
-    def create_request(self, custom_url: str = Constants.URL_WEBSITE, custom_headers=Constants.HEADERS) -> Request:
+    def create_request(self, custom_url: str = Constants.URL_WEBSITE, custom_headers: dict = Constants.HEADERS) -> Request:
         return Request(
             url=custom_url,
             headers=custom_headers
