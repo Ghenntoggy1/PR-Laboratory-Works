@@ -133,9 +133,9 @@ if __name__ == '__main__':
     print('XML Response:', response_xml.status_code, response_xml.text)
 
     while True:
-        # 404
+        # 503
         password = input("Enter password: ")
-        # 307
+        # 201
         username = input("Enter username: ")
         response_json = requests.post(url, data=data_json, headers={'Content-Type': 'application/json'},
                                       auth=(username, password))

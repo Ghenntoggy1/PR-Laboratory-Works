@@ -242,11 +242,7 @@ def deserialize_phone_LINERS(phone_str: bytearray) -> PhoneEntity:
                 prev_key = key
             else:
                 prev_key = ""
-        else:
-            dict_str[key] = {}
-            start_index = object_str.find("|+", start_index) + 3
-            end_index = object_str.find(" - ", start_index)
-            inner_object_str = object_str[start_index:end_index]
+
 
     # Create and return PhoneEntity
     return PhoneEntity(url=dict_str.get("url"), title=dict_str.get("title"), price=dict_str.get("priceObj"), description=dict_str.get("description"))

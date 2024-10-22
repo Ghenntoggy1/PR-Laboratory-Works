@@ -6,7 +6,7 @@ class PhoneEntity:
         self.url = url
         self.title = title
         self.price = price
-        self.description = description.replace(" : ", ":")
+        self.description = description.replace(" : ", ":") if description is not None else "Not Available"
 
     def __repr__(self):
         return f"PhoneEntity({self.url}, {self.title}, {self.price}, {self.description})"

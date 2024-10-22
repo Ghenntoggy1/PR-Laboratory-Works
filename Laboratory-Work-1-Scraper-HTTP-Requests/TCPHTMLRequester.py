@@ -20,6 +20,7 @@ class TCPHTMLRequester(WebScraper):
         for header, value in custom_headers.items():
             request += f"{header}: {value}\r\n"
         request += "\r\n"
+        # request += "Connection: close\r\n"
         return request
 
     def send_request(self, request: str = None) -> str:
@@ -29,7 +30,7 @@ class TCPHTMLRequester(WebScraper):
         secure_tcp_ip_socket.connect((self.host, self.port))
         get_request = request if request is not None else self.create_request(Constants.URL_WEBSITE, Constants.HEADERS)
         secure_tcp_ip_socket.send(get_request.encode())
-        secure_tcp_ip_socket.settimeout(5)
+        # secure_tcp_ip_socket.settimeout(5)
         response = b""
         while True:
             chunk_data = secure_tcp_ip_socket.recv(2048)
