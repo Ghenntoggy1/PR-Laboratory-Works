@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from ..connection import Base
 
@@ -13,6 +13,8 @@ class PhoneTableModel(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     url = Column(String, nullable=False)
     title = Column(String, nullable=False)
-    price_currency_id = Column(Integer, ForeignKey("price.id"), nullable=False)
-    price_currency = relationship("PriceTableModel")
     description = Column(String, nullable=False)
+
+    # Define the foreign key for the price_currency column
+    price_currency_id = Column(Integer, ForeignKey("price.id"), nullable=False)
+    price_currency = relationship("PriceTableModel", backref=backref("phone", uselist=False))
