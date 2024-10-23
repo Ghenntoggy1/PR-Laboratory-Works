@@ -2,6 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
+# Import the necessary modules from the SQLAlchemy library - ORM framework
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
