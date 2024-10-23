@@ -40,7 +40,7 @@ class Price(BaseModel):
 class PhoneEntity(BaseModel):
     url: str
     title: str
-    price_currency: Price  # Use the Price model for structured price data
+    price_currency: Price
     description: str
 
     @field_validator('description', mode='before')
