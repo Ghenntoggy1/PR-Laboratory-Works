@@ -1,13 +1,13 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
-from ..connection import Base
+from ..database.connection import Base
 
 
 # From connection import Base that is the base model for ORM models.
 class PhoneTableModel(Base):
     # Define the name of the table
-    __table__ = "phone"
+    __tablename__ = "phone"
 
     # Define the columns of the table
     id = Column(Integer, primary_key=True, nullable=False)
