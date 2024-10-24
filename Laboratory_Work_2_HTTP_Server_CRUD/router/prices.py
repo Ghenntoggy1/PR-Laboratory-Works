@@ -32,7 +32,13 @@ def post_prices(priceModel: PriceModel, response: Response, db: Session = Depend
         return {'message': 'Price cannot be negative', 'Status Code': status.HTTP_400_BAD_REQUEST}
     if len(priceModel.currency) != 3:
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return {'message': 'Currency must be 3 characters long', 'Status Code': status.HTTP_400_BAD_REQUEST}
+        return {"message": "Currency must be 3 characters long", "Status Code": status.HTTP_400_BAD_REQUEST}
+    if not priceModel.currency.isalpha():
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Currency must be formed of characters", "Status Code": status.HTTP_400_BAD_REQUEST}
+    if not priceModel.currency.isupper():
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Currency must be uppercase characters", "Status Code": status.HTTP_400_BAD_REQUEST}
     price = PriceTableModel(
         price=priceModel.price,
         currency=priceModel.currency
@@ -55,7 +61,7 @@ def post_prices(prices: list[PriceModel], response: Response, db: Session = Depe
             price=priceModel.price,
             currency=priceModel.currency
         )
-        if priceModel.price < 0 or len(priceModel.currency) != 3:
+        if priceModel.price < 0 or len(priceModel.currency) != 3 or not priceModel.currency.isalpha() or not priceModel.currency.isupper():
             invalid_prices.append(price)
         else:
             valid_prices.append(price)
@@ -85,7 +91,7 @@ def post_prices(prices: list[PriceModel], response: Response, db: Session = Depe
 
 # R - Read Operations
 # Read all prices
-@prices_router.get('/read_all',
+@prices_router.get('/read/all',
                    response_model=dict[str, Union[str, list[PriceModelDTO], int]],
                    status_code=status.HTTP_200_OK)
 def get_all_prices(response: Response,
@@ -126,7 +132,7 @@ def get_all_prices_by_id(price_id: int,
 
 
 # Read price by price_amount
-@prices_router.get('/read/amount/{price_amount}',
+@prices_router.get('/read/amount:{price_amount}',
                    response_model=dict[str, Union[str, list[PriceModelDTO], int]],
                    status_code=status.HTTP_200_OK)
 def get_all_prices_by_amount(price_amount: float,
@@ -152,7 +158,7 @@ def get_all_prices_by_amount(price_amount: float,
 
 
 # Read price by currency
-@prices_router.get('/read/currency/{price_currency}',
+@prices_router.get('/read/currency:{price_currency}',
                    response_model=dict[str, Union[str, list[PriceModelDTO], int]],
                    status_code=status.HTTP_200_OK)
 def get_all_prices_by_currency(price_currency: str,
@@ -182,15 +188,65 @@ def get_all_prices_by_currency(price_currency: str,
     return {"message": "Successfully Returned Prices", "prices": prices, "Status Code": status.HTTP_200_OK}
 
 
+# U - Update Operations
+# Update price by id
+@prices_router.put('/update/id:{price_id}',
+                   response_model=dict[str, Union[str, PriceModelDTO, int]],
+                   status_code=status.HTTP_200_OK)
+def update_price_by_id(price_id: int, new_price: PriceModel, response: Response, db: Session = Depends(get_db)):
+    if new_price.price < 0:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {'message': 'Price cannot be negative', 'Status Code': status.HTTP_400_BAD_REQUEST}
+    if len(new_price.currency) != 3:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Currency must be 3 characters long", "Status Code": status.HTTP_400_BAD_REQUEST}
+    if not new_price.currency.isalpha():
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Currency must be formed of characters", "Status Code": status.HTTP_400_BAD_REQUEST}
+    if not new_price.currency.isupper():
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Currency must be uppercase characters", "Status Code": status.HTTP_400_BAD_REQUEST}
+    old_price = db.query(PriceTableModel).filter(PriceTableModel.id == price_id).first()
+    if not old_price:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "Old price not found", "Status Code": status.HTTP_404_NOT_FOUND}
+
+    db.query(PriceTableModel).filter(PriceTableModel.id == price_id).update(new_price.model_dump(exclude_unset=True))
+    db.commit()
+    db.refresh(old_price)
+    return {"message": "Price updated", "updated_price": old_price, "Status Code": status.HTTP_200_OK}
+
 # D - Delete Operations
 # Delete all prices
 @prices_router.delete("/delete",
                       response_model=dict[str, Union[str, int]],
                       status_code=status.HTTP_200_OK)
-def delete_all_prices(db: Session = Depends(get_db)):
+def delete_all_prices(response: Response,
+                      db: Session = Depends(get_db)):
+    if not db.query(PriceTableModel).all():
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "No prices found", "Status Code": status.HTTP_404_NOT_FOUND}
     db.query(PriceTableModel).delete()
     db.commit()
     return {"message": "All prices deleted", "Status Code": status.HTTP_200_OK}
+
+
+# # Delete multiple prices
+# @prices_router.delete("/delete/many",
+#                       response_model=dict[str, Union[str, int]],
+#                       status_code=status.HTTP_200_OK)
+# def delete_all_prices(prices: list[PriceModel],
+#                       response: Response,
+#                       db: Session = Depends(get_db)):
+#     valid_prices = []
+#     invalid_prices = []
+#     for priceModel in prices:
+#         price = PriceTableModel(priceModel.model_dump(exclude_unset=True))
+#         if priceModel.price < 0 or len(priceModel.currency) != 3 or not priceModel.currency.isalpha() or not priceModel.currency.isupper():
+#             invalid_prices.append(price)
+#         else:
+#             valid_prices.append(price)
+
 
 
 # Delete price by id
@@ -208,8 +264,9 @@ def delete_price_by_id(price_id: int,
     db.commit()
     return {"message": "Price deleted", "price_delete": price, "Status Code": status.HTTP_200_OK}
 
+
 # Delete price by price_currency
-@prices_router.delete("/delete/price_currency:{price_currency}",
+@prices_router.delete("/delete/currency:{price_currency}",
                       response_model=dict[str, Union[str, list[PriceModelDTO], int]],
                       status_code=status.HTTP_200_OK)
 def delete_prices_by_currency(price_currency: str,
@@ -235,7 +292,7 @@ def delete_prices_by_currency(price_currency: str,
 
 
 # Delete price by price_amount
-@prices_router.delete("/delete/price_amount:{price_amount}",
+@prices_router.delete("/delete/amount:{price_amount}",
                       response_model=dict[str, Union[str, list[PriceModelDTO], int]],
                       status_code=status.HTTP_200_OK)
 def delete_prices_by_currency(price_amount: float,
