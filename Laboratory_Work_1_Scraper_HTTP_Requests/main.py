@@ -104,6 +104,14 @@ if __name__ == '__main__':
         phone_json_serialized = serialize_phone_JSON(phone.to_dict())
         print(phone_json_serialized)
 
+    # json_file = "phones.json"
+    # with open(json_file, "w") as file:
+    #     json.dump([phone.to_dict() for phone in all_phones], file, indent=4)
+    #
+    # json_file_price = "prices.json"
+    # with open(json_file_price, "w") as file:
+    #     json.dump([phone.price_currency.model_dump() for phone in all_phones], file, indent=4)
+
     print("SERIALIZED JSON LIST OBJECTS")
     phone_dicts = []
     for phone in all_phones_TCP:

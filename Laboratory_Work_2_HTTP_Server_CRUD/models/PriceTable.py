@@ -9,7 +9,7 @@ class PriceTableModel(Base):
     __tablename__ = "price"
 
     # Define the columns of the table
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     price = Column(Float, nullable=False)
     currency = Column(String, nullable=False)
 

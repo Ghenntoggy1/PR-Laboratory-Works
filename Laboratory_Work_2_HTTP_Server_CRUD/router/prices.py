@@ -163,6 +163,12 @@ def get_all_prices_by_currency(price_currency: str,
     if len(price_currency) != 3:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"message": "Currency must be 3 characters long", "Status Code": status.HTTP_400_BAD_REQUEST}
+    if not price_currency.isalpha():
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Currency must be formed of characters", "Status Code": status.HTTP_400_BAD_REQUEST}
+    if not price_currency.isupper():
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Currency must be uppercase characters", "Status Code": status.HTTP_400_BAD_REQUEST}
     prices = (db.query(PriceTableModel)
               .filter(PriceTableModel.currency == price_currency)
               .limit(limit)
@@ -177,5 +183,73 @@ def get_all_prices_by_currency(price_currency: str,
 
 
 # D - Delete Operations
+# Delete all prices
+@prices_router.delete("/delete",
+                      response_model=dict[str, Union[str, int]],
+                      status_code=status.HTTP_200_OK)
+def delete_all_prices(db: Session = Depends(get_db)):
+    db.query(PriceTableModel).delete()
+    db.commit()
+    return {"message": "All prices deleted", "Status Code": status.HTTP_200_OK}
+
+
 # Delete price by id
-# @prices_router.delete("/delete/id/{id}")
+@prices_router.delete("/delete/id:{price_id}",
+                      response_model=dict[str, Union[str, PriceModelDTO, int]],
+                      status_code=status.HTTP_200_OK)
+def delete_price_by_id(price_id: int,
+                       response: Response,
+                       db: Session = Depends(get_db)):
+    if not db.query(PriceTableModel).filter(PriceTableModel.id == price_id).first():
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "Price not found", "Status Code": status.HTTP_404_NOT_FOUND}
+    price = db.query(PriceTableModel).filter(PriceTableModel.id == price_id).first()
+    db.query(PriceTableModel).filter(PriceTableModel.id == price_id).delete()
+    db.commit()
+    return {"message": "Price deleted", "price_delete": price, "Status Code": status.HTTP_200_OK}
+
+# Delete price by price_currency
+@prices_router.delete("/delete/price_currency:{price_currency}",
+                      response_model=dict[str, Union[str, list[PriceModelDTO], int]],
+                      status_code=status.HTTP_200_OK)
+def delete_prices_by_currency(price_currency: str,
+                              response: Response,
+                              db: Session = Depends(get_db)):
+    if len(price_currency) != 3:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Currency must be 3 characters long", "Status Code": status.HTTP_400_BAD_REQUEST}
+    if not price_currency.isalpha():
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Currency must be formed of characters", "Status Code": status.HTTP_400_BAD_REQUEST}
+    if not price_currency.isupper():
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Currency must be uppercase characters", "Status Code": status.HTTP_400_BAD_REQUEST}
+    if not db.query(PriceTableModel).filter(PriceTableModel.currency == price_currency).all():
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "Price not found", "Status Code": status.HTTP_404_NOT_FOUND}
+
+    price = db.query(PriceTableModel).filter(PriceTableModel.currency == price_currency).all()
+    db.query(PriceTableModel).filter(PriceTableModel.currency == price_currency).delete()
+    db.commit()
+    return {"message": "Prices deleted", "price_delete": price, "Status Code": status.HTTP_200_OK}
+
+
+# Delete price by price_amount
+@prices_router.delete("/delete/price_amount:{price_amount}",
+                      response_model=dict[str, Union[str, list[PriceModelDTO], int]],
+                      status_code=status.HTTP_200_OK)
+def delete_prices_by_currency(price_amount: float,
+                              response: Response,
+                              db: Session = Depends(get_db)):
+    if price_amount < 0:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Price cannot be negative", "Status Code": status.HTTP_400_BAD_REQUEST}
+    if not db.query(PriceTableModel).filter(PriceTableModel.price == price_amount).all():
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "Price not found", "Status Code": status.HTTP_404_NOT_FOUND}
+
+    prices = db.query(PriceTableModel).filter(PriceTableModel.price == price_amount).all()
+    print(prices)
+    db.query(PriceTableModel).filter(PriceTableModel.price == price_amount).delete()
+    db.commit()
+    return {"message": "Prices deleted", "price_delete": prices, "Status Code": status.HTTP_200_OK}
