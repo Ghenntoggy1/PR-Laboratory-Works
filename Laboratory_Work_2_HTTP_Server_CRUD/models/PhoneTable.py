@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
-from ..database.connection import Base
+from database.connection import Base, engine
 
 
 # From connection import Base that is the base model for ORM models.
@@ -18,3 +18,7 @@ class PhoneTableModel(Base):
     # Define the foreign key for the price_currency column
     price_currency_id = Column(Integer, ForeignKey("price.id"), nullable=False)
     price_currency = relationship("PriceTableModel", backref=backref("phone", uselist=False))
+
+
+def create_table():
+    PhoneTableModel.metadata.create_all(bind=engine)

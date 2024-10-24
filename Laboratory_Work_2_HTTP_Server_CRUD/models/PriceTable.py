@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, Float, String
 
-from ..database.connection import Base
+from database.connection import Base, engine
 
 
 # From connection import Base that is the base model for ORM models.
@@ -12,3 +12,7 @@ class PriceTableModel(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     price = Column(Float, nullable=False)
     currency = Column(String, nullable=False)
+
+
+def create_table():
+    PriceTableModel.metadata.create_all(bind=engine)
