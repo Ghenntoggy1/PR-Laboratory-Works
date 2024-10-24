@@ -18,7 +18,8 @@ class PhoneTableModel(Base):
     # Define the foreign key for the price_currency column
     price_currency_id = Column(Integer, ForeignKey("price.id"), nullable=False)
     price_currency = relationship("PriceTableModel", backref=backref("phone", uselist=False))
-
+    
 
 def create_table():
     PhoneTableModel.metadata.create_all(bind=engine)
+
