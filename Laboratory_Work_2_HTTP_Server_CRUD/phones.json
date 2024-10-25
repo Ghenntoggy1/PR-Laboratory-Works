@@ -1,156 +1,137 @@
-{
-  "message": "Phones found",
-  "phones": [
+[
     {
-      "id": 65,
-      "url": "https://darwin.md/samsung-galaxy-s23-8-gb-256-gb-light-pink.html",
-      "title": "Samsung Galaxy S23+ 256 GB Pink Light",
-      "price_currency": {
-        "price": 769.1794871794872,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-4 nm"
+        "url": "https://darwin.md/samsung-galaxy-s23-8-gb-256-gb-light-pink.html",
+        "title": "Samsung Galaxy S23+ 256 GB Pink Light",
+        "price_currency": {
+            "price": 769.1794871794872,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-4 nm"
     },
     {
-      "id": 66,
-      "url": "https://darwin.md/iphone-12-apple-128-gb-green.html",
-      "title": "Apple iPhone 12 128 GB Green",
-      "price_currency": {
-        "price": 615.3333333333333,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-5 nm"
+        "url": "https://darwin.md/iphone-12-apple-128-gb-green.html",
+        "title": "Apple iPhone 12 128 GB Green",
+        "price_currency": {
+            "price": 615.3333333333333,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-5 nm"
     },
     {
-      "id": 67,
-      "url": "https://darwin.md/smartphone_apple-iphone-11-64gb-black.html",
-      "title": "Apple iPhone 11 64 GB Black",
-      "price_currency": {
-        "price": 410.2051282051282,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-7 nm"
+        "url": "https://darwin.md/smartphone_apple-iphone-11-64gb-black.html",
+        "title": "Apple iPhone 11 64 GB Black",
+        "price_currency": {
+            "price": 410.2051282051282,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-7 nm\n                                   \r\n7ff9"
     },
     {
-      "id": 68,
-      "url": "https://darwin.md/smartphone_apple-iphone-11-128gb-white.html",
-      "title": "Apple iPhone 11 128 GB White",
-      "price_currency": {
-        "price": 461.48717948717945,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-7 nm"
+        "url": "https://darwin.md/smartphone_apple-iphone-11-128gb-white.html",
+        "title": "Apple iPhone 11 128 GB White",
+        "price_currency": {
+            "price": 461.48717948717945,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-7 nm"
     },
     {
-      "id": 69,
-      "url": "https://darwin.md/samsung-galaxy-s21-fe-6-gb-128-gb-gray.html",
-      "title": "Samsung Galaxy S21 FE 128 GB Gray",
-      "price_currency": {
-        "price": 640.974358974359,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-5 nm"
+        "url": "https://darwin.md/samsung-galaxy-s21-fe-6-gb-128-gb-gray.html",
+        "title": "Samsung Galaxy S21 FE 128 GB Gray",
+        "price_currency": {
+            "price": 640.974358974359,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-5 nm"
     },
     {
-      "id": 70,
-      "url": "https://darwin.md/apple-iphone-13-4-gb-128-gb-midnight.html",
-      "title": "Apple iPhone 13 128 GB Midnight",
-      "price_currency": {
-        "price": 599.9487179487179,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-5 nm"
+        "url": "https://darwin.md/apple-iphone-13-4-gb-128-gb-midnight.html",
+        "title": "Apple iPhone 13 128 GB Midnight",
+        "price_currency": {
+            "price": 599.9487179487179,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-5 nm"
     },
     {
-      "id": 71,
-      "url": "https://darwin.md/smartphone_apple-iphone-11-128gb-black.html",
-      "title": "Apple iPhone 11 128 GB Black",
-      "price_currency": {
-        "price": 461.48717948717945,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-7 nm"
+        "url": "https://darwin.md/smartphone_apple-iphone-11-128gb-black.html",
+        "title": "Apple iPhone 11 128 GB Black",
+        "price_currency": {
+            "price": 461.48717948717945,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-7 nm"
     },
     {
-      "id": 72,
-      "url": "https://darwin.md/iphone-12-apple-128-gb-black.html",
-      "title": "Apple iPhone 12 128 GB Black",
-      "price_currency": {
-        "price": 615.3333333333333,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-5 nm"
+        "url": "https://darwin.md/iphone-12-apple-128-gb-black.html",
+        "title": "Apple iPhone 12 128 GB Black",
+        "price_currency": {
+            "price": 615.3333333333333,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-5 nm"
     },
     {
-      "id": 73,
-      "url": "https://darwin.md/apple-iphone-13-4-gb-128-gb-starlight.html",
-      "title": "Apple iPhone 13 128 GB Starlight",
-      "price_currency": {
-        "price": 599.9487179487179,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-5 nm"
+        "url": "https://darwin.md/apple-iphone-13-4-gb-128-gb-starlight.html",
+        "title": "Apple iPhone 13 128 GB Starlight",
+        "price_currency": {
+            "price": 599.9487179487179,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-5 nm"
     },
     {
-      "id": 74,
-      "url": "https://darwin.md/apple-iphone-13-4-gb-128-gb-pink.html",
-      "title": "Apple iPhone 13 128 GB Pink",
-      "price_currency": {
-        "price": 599.9487179487179,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-5 nm"
+        "url": "https://darwin.md/apple-iphone-13-4-gb-128-gb-pink.html",
+        "title": "Apple iPhone 13 128 GB Pink",
+        "price_currency": {
+            "price": 599.9487179487179,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-5 nm"
     },
     {
-      "id": 75,
-      "url": "https://darwin.md/samsung-galaxy-m32-6-gb-128-gb-black.html",
-      "title": "Samsung Galaxy M32 128 GB Black",
-      "price_currency": {
-        "price": 287.12820512820514,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-12 nm"
+        "url": "https://darwin.md/samsung-galaxy-m32-6-gb-128-gb-black.html",
+        "title": "Samsung Galaxy M32 128 GB Black",
+        "price_currency": {
+            "price": 287.12820512820514,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-12 nm"
     },
     {
-      "id": 76,
-      "url": "https://darwin.md/redmi-9c-xiaomi-gray-2-32-gb-dual.html",
-      "title": "Xiaomi Redmi 9C 32 GB Gray",
-      "price_currency": {
-        "price": 153.7948717948718,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-12 nm"
+        "url": "https://darwin.md/redmi-9c-xiaomi-gray-2-32-gb-dual.html",
+        "title": "Xiaomi Redmi 9C 32 GB Gray",
+        "price_currency": {
+            "price": 153.7948717948718,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-12 nm"
     },
     {
-      "id": 77,
-      "url": "https://darwin.md/smartphone_apple-iphone-11-64gb-red.html",
-      "title": "Apple iPhone 11 64 GB Red",
-      "price_currency": {
-        "price": 512.7692307692307,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-7 nm"
+        "url": "https://darwin.md/smartphone_apple-iphone-11-64gb-red.html",
+        "title": "Apple iPhone 11 64 GB Red",
+        "price_currency": {
+            "price": 512.7692307692307,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-7 nm"
     },
     {
-      "id": 78,
-      "url": "https://darwin.md/apple-iphone-13-4-gb-256-gb-midnight.html",
-      "title": "Apple iPhone 13 256 GB Midnight",
-      "price_currency": {
-        "price": 769.1794871794872,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-5 nm"
+        "url": "https://darwin.md/apple-iphone-13-4-gb-256-gb-midnight.html",
+        "title": "Apple iPhone 13 256 GB Midnight",
+        "price_currency": {
+            "price": 769.1794871794872,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-5 nm"
     },
     {
-      "id": 79,
-      "url": "https://darwin.md/apple-iphone-13-128-gb-blue.html",
-      "title": "Apple iPhone 13 128 GB Blue",
-      "price_currency": {
-        "price": 599.9487179487179,
-        "currency": "EUR"
-      },
-      "description": "Tehnologia de fabricație-5 nm"
+        "url": "https://darwin.md/apple-iphone-13-128-gb-blue.html",
+        "title": "Apple iPhone 13 128 GB Blue",
+        "price_currency": {
+            "price": 599.9487179487179,
+            "currency": "EUR"
+        },
+        "description": "Tehnologia de fabrica\u021bie-5 nm"
     }
-  ],
-  "status_code": 200
-}
+]

@@ -37,6 +37,7 @@ class Price(BaseModel):
     price: float
     currency: str
 
+
 class PhoneEntity(BaseModel):
     url: str
     title: str
