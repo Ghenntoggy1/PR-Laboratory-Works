@@ -1,9 +1,11 @@
+from typing import Optional
+
 from pydantic import BaseModel, field_validator
 
 
 class PriceModel(BaseModel):
-    price: float
-    currency: str
+    price: Optional[float] = None
+    currency: Optional[str] = None
 
     # @field_validator('price', mode='before')
     # def format_price(cls, value: float) -> float:
@@ -13,6 +15,7 @@ class PriceModel(BaseModel):
     # features
     class Config:
         orm_mode = True
+
 
 class PriceModelDTO(BaseModel):
     id: int
