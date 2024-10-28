@@ -8,15 +8,18 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path="database/.env")
+load_dotenv(dotenv_path="./.env")
 
 # Get the database connection URL from the environment variables
 DATABASE_USERNAME = os.getenv("DATABASE_USERNAME")
 DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
-DATABASE_URL = os.getenv("DATABASE_URL")
+# DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_CONTAINER_NAME = os.getenv("DATABASE_CONTAINER_NAME")
+# DATABASE_CONTAINER_NAME = "localhost"
 DATABASE_NAME = os.getenv("DATABASE_NAME")
 DATABASE_PORT = os.getenv("DATABASE_PORT")
-DATABASE_CONNECTION_URL = f"postgresql+psycopg2://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{DATABASE_URL}:{DATABASE_PORT}/{DATABASE_NAME}"
+DATABASE_CONNECTION_URL = f"postgresql+psycopg2://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{DATABASE_CONTAINER_NAME}:{DATABASE_PORT}/{DATABASE_NAME}"
+# DATABASE_CONNECTION_URL = f"postgresql+psycopg2://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@localhost:5454/{DATABASE_NAME}"
 
 # Create the database engine using the connection URL - to Docker container
 # Engine is factory that can create new database connections for us, which also holds onto connections inside of a

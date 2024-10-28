@@ -53,7 +53,8 @@ def start_websocket_server():
 
 
 def start_http_server():
-    uvicorn.run("main:app", host="localhost", port=8000)
+    # uvicorn.run("main:app", host="localhost", port=8000)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)
 
 
 if __name__ == "__main__":

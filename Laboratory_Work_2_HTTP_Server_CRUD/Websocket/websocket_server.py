@@ -41,6 +41,7 @@ async def unregister_client(client_socket: websockets.WebSocketServerProtocol):
                 username = client.get("username")
                 print(f"Client {username} {client_socket.remote_address} disconnected from Room {room_id}!")
     print(chat_rooms)
+    await client_socket.close()
     if len(chat_rooms[room_id_c]) == 0:
         chat_rooms.pop(room_id_c)
         print(f"Room {room_id_c} removed!")
@@ -77,6 +78,7 @@ async def process_message(message: str, client_socket: websockets.WebSocketServe
 
 async def handle_client_connection(client_socket: websockets.WebSocketServerProtocol):
     message = await client_socket.recv()
+    print(f"Client {client_socket.remote_address} connected!")
     print(f"Received message: {message}")
 
     data = json.loads(message)
@@ -89,10 +91,13 @@ async def handle_client_connection(client_socket: websockets.WebSocketServerProt
         new_message = await client_socket.recv()
         print(f"Received message: {new_message}")
         await process_message(new_message, client_socket)
+        if json.loads(new_message).get("type") == "quit":
+            print(f"Client TEST disconnected!")
+            print("Status:", client_socket.open)
 
 
 async def start_server():
-    await websockets.serve(handle_client_connection, host="localhost", port=8001)
+    await websockets.serve(handle_client_connection, host="0.0.0.0", port=8001)
     print("Websocket Server Started!")
     await asyncio.Future()
 
