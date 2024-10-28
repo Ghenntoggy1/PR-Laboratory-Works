@@ -19,15 +19,23 @@ function joinRoom() {
     websocket.onopen = () => {
         connectionEstablished = true;
         websocket.send(JSON.stringify({ type: "join", username: username, room_id: room }));
+        const chatbox = document.getElementById("chatbox");
         document.getElementById("connect").style.display = "none";
         document.getElementById("disconnect").style.display = "block";
+        chatbox.innerHTML = "";
     };
 
     websocket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.username && data.username === "System") {
             logMessage(`${data.username}: ${data.message}`);
-        } else {
+        }
+        else if (data.type === "error") {
+            logMessage(`System: ${data.message}`);
+            document.getElementById("connect").style.display = "block";
+            document.getElementById("disconnect").style.display = "none";
+        }
+        else {
             logMessage(`Client ${data.username}: ${data.message}`);
         }
     };
