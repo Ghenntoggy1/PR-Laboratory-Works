@@ -1,5 +1,5 @@
 import re
-from CurrencyConvertor import CurrencyConvertor
+from CurrencyConvertor import CurrencyConvertor, construct_price_currency
 import functools
 from Phone import PhoneEntity
 
@@ -34,12 +34,13 @@ def switch_currency(phone_entity_list: list, new_currency: str) -> list:
         print(f"Currency {new_currency} not supported")
         return phone_entity_list
 
-    def convert_phone_currency(phone_entity):
-        current_currency = phone_entity.price.get("currency")
-        current_price = phone_entity.price.get("price")
+    def convert_phone_currency(phone_entity: PhoneEntity) -> PhoneEntity:
+        current_currency = phone_entity.price_currency.currency
+        current_price = phone_entity.price_currency.price
         new_price = currency_convertor.convert(current_price, current_currency, new_currency)
-        phone_entity.price["price"] = new_price
-        phone_entity.price["currency"] = new_currency
+
+        price_currency = construct_price_currency(new_price, new_currency)
+        phone_entity.price_currency = price_currency
         return phone_entity
 
     phone_entity_list = list(map(convert_phone_currency, phone_entity_list))
@@ -47,9 +48,9 @@ def switch_currency(phone_entity_list: list, new_currency: str) -> list:
 
 
 # POINT 6 - FILTER BY PRICE
-def filter_phones(min_price: float, max_price: float, phone_list: list) -> list:
+def filter_phones(min_price: float, max_price: float, phone_list: list[PhoneEntity]) -> list:
     print(f"Phones with price between {min_price} and {max_price}")
-    phone_new_list = list(filter(lambda phone_entity: min_price <= phone_entity.price.get("price") <= max_price,
+    phone_new_list = list(filter(lambda phone_entity: min_price <= phone_entity.price_currency.price <= max_price,
                                  phone_list))
     for phone in phone_new_list:
         print(phone.__repr__())
@@ -57,14 +58,14 @@ def filter_phones(min_price: float, max_price: float, phone_list: list) -> list:
 
 
 # POINT 6 - SUM PRICES
-def sum_prices(phone_list: list) -> float:
+def sum_prices(phone_list: list[PhoneEntity]) -> float:
     if not phone_list:
         print("No phones to sum")
         return 0.0
 
     return functools.reduce(
         lambda pe1, pe2: pe1 + pe2,
-        map(lambda phone: phone.price.get("price"), phone_list)
+        map(lambda phone: phone.price_currency.price, phone_list)
     )
 
 
@@ -243,9 +244,11 @@ def deserialize_phone_LINERS(phone_str: bytearray) -> PhoneEntity:
             else:
                 prev_key = ""
 
-
     # Create and return PhoneEntity
-    return PhoneEntity(url=dict_str.get("url"), title=dict_str.get("title"), price=dict_str.get("priceObj"), description=dict_str.get("description"))
+    price_currency = construct_price_currency(price_str_to_float(dict_str.get("priceObj").get("price")), dict_str.get("priceObj").get("currency"))
+    dict_str.pop("priceObj")
+    dict_str["price_currency"] = price_currency
+    return PhoneEntity.model_validate(dict_str)
 
 
 def deserialize_list_phones_LINERS(phones_str: bytearray) -> list[PhoneEntity]:
@@ -254,8 +257,7 @@ def deserialize_list_phones_LINERS(phones_str: bytearray) -> list[PhoneEntity]:
     data_str_list = data_str.split("!")
     phones = []
     for data in data_str_list:
-        phone_data = deserialize_phone_LINERS(bytearray(data.encode("utf-8")))
-        phone_entity = PhoneEntity(url=phone_data.url, title=phone_data.title, price=phone_data.price, description=phone_data.description)
+        phone_entity = deserialize_phone_LINERS(bytearray(data.encode("utf-8")))
         phones.append(phone_entity)
         print(phone_entity)
     return phones
