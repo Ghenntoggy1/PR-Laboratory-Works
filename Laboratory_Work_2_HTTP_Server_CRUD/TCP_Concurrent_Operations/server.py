@@ -16,6 +16,8 @@ mutex = Lock()
 # write_semaphore = Semaphore(1)
 write_count = 0
 
+# semaphore = Semaphore(1)
+
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
@@ -41,6 +43,7 @@ def handle_client_connection(client_socket):
         print("Write count:", write_count, "\n")
 
         if command == "write" and args:
+            # semaphore.acquire()
             write_count += 1
             print("INCREMENT WRITE COUNT:", write_count)
 
@@ -59,6 +62,7 @@ def handle_client_connection(client_socket):
 
             write_count -= 1
             print("DECREMENT WRITE COUNT:", write_count)
+            # semaphore.release()
 
         elif command == "read":
             tm = random.randint(1, 7)
@@ -67,14 +71,16 @@ def handle_client_connection(client_socket):
             print(f"READ THREAD {client_socket.getpeername()}: Woke up after {tm} seconds.\n")
 
             while write_count > 0:
+            # while not semaphore.acquire(blocking=False):
                 print(f"{client_socket.getpeername()} Waiting for write threads ({write_count}) to finish...\n")
-                time.sleep(0.1)
-
+                time.sleep(0.5)
+            # else:
             print(f"No more write threads. {client_socket.getpeername()} reading the file...\n")
             with mutex:  # Lock resource for reading
                 with open(SHARED_RESOURCE, 'r') as file:
                     content = file.read()
                 response = "READ -\n" + content + "- END READ"
+            # semaphore.release()
         else:
             response = "Invalid command."
 
