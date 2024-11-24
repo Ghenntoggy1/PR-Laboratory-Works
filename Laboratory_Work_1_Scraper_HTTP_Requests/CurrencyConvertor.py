@@ -1,5 +1,5 @@
-from Constants import Constants
-from Phone import Price
+from Laboratory_Work_1_Scraper_HTTP_Requests.Constants import Constants
+from Laboratory_Work_1_Scraper_HTTP_Requests.Phone import Price
 
 
 def construct_price_currency(price: float, currency: str) -> Price:

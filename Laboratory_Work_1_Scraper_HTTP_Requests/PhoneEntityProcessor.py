@@ -1,7 +1,7 @@
 import re
-from CurrencyConvertor import CurrencyConvertor, construct_price_currency
+from Laboratory_Work_1_Scraper_HTTP_Requests.CurrencyConvertor import CurrencyConvertor, construct_price_currency
 import functools
-from Phone import PhoneEntity
+from Laboratory_Work_1_Scraper_HTTP_Requests.Phone import PhoneEntity
 
 
 # POINT 5 - VALIDATION OF PRICE

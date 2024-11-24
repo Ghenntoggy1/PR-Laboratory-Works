@@ -1,0 +1,14 @@
+version : '3.8'
+services :
+  ftp_server :
+    image : stilliard/pure-ftpd:hardened
+    container_name : ftp_server
+    ports :
+      - "21:21"
+      - "30000-30009:30000-30009" # Passive ports for FTP
+    environment :
+      FTP_USER_NAME : testuser # FTP username
+      FTP_USER_PASS : testpass # FTP password
+      FTP_USER_HOME : / home / testuser # FTP user home directory
+    volumes :
+      - ./ftp_data:/home/testuser # Map local directory to FTP home

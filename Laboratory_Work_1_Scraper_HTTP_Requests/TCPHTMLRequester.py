@@ -1,8 +1,8 @@
 import socket
 import ssl
 
-from Constants import Constants
-from WebScraper import WebScraper
+from Laboratory_Work_1_Scraper_HTTP_Requests.Constants import Constants
+from Laboratory_Work_1_Scraper_HTTP_Requests.WebScraper import WebScraper
 
 
 class TCPHTMLRequester(WebScraper):

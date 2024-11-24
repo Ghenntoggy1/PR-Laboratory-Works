@@ -4,7 +4,7 @@ from abc import abstractmethod, ABC
 from typing import Union
 
 import requests
-from Constants import Constants
+from Laboratory_Work_1_Scraper_HTTP_Requests.Constants import Constants
 from urllib.request import urlopen, Request
 from bs4 import BeautifulSoup, PageElement
 
