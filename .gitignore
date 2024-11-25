@@ -163,5 +163,6 @@ cython_debug/
 .idea/
 
 Laboratory_Work_2_HTTP_Server_CRUD/.env
-
 Laboratory_Work_2_HTTP_Server_CRUD/.dockerignore
+
+Laboratory_Work_3_RAFT_RabbitMQ/data/

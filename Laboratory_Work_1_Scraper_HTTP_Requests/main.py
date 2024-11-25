@@ -136,6 +136,16 @@ def start_process(web_scraper: WebScraper) -> tuple[FilteredPhones, list[PhoneEn
     print(filtered_phones.__repr__())
     return filtered_phones, all_phones_TCP
 
+def process_phones(min_price: float, max_price: float, new_currency: str, phones: list[PhoneEntity]) -> FilteredPhones:
+    # POINT 6 - SWITCH CURRENCY, FILTER BY PRICE
+    phones = switch_currency(phones, new_currency)
+    phones = filter_phones(min_price, max_price, phones)
+    dt = datetime.datetime.now(timezone.utc)
+    utc_time = dt.replace(tzinfo=timezone.utc)
+    utc_timestamp = utc_time.timestamp()
+    filtered_phones = FilteredPhones(phones, sum_prices(phones), utc_timestamp)
+    return filtered_phones
+
 if __name__ == '__main__':
     print("Web Scraping with Urllib")
     urllib_web_scraper: UrllibHTMLRequester = UrllibHTMLRequester()
