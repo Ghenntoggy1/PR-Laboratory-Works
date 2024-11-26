@@ -5,12 +5,12 @@ from datetime import timezone
 import datetime
 import re
 
-from Constants import Constants
-from PhoneEntityProcessor import price_str_to_float, construct_price_currency, switch_currency, filter_phones, \
+from .Constants import Constants
+from .PhoneEntityProcessor import price_str_to_float, construct_price_currency, switch_currency, filter_phones, \
     sum_prices
-from Phone import PhoneEntity
-from WebScraper import WebScraper
-from FilteredPhones import FilteredPhones
+from .Phone import PhoneEntity
+from .WebScraper import WebScraper
+from .FilteredPhones import FilteredPhones
 
 
 def get_phones_html(web_scraper: WebScraper) -> list | PageElement:

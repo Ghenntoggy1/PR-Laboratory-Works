@@ -1,6 +1,6 @@
 from urllib.request import Request, urlopen
-from Constants import Constants
-from WebScraper import WebScraper
+from .Constants import Constants
+from .WebScraper import WebScraper
 
 
 class UrllibHTMLRequester(WebScraper):

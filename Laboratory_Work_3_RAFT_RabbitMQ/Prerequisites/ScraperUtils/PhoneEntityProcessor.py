@@ -1,7 +1,7 @@
 import re
-from CurrencyConvertor import CurrencyConvertor, construct_price_currency
+from .CurrencyConvertor import CurrencyConvertor, construct_price_currency
 import functools
-from Phone import PhoneEntity
+from .Phone import PhoneEntity
 
 
 # POINT 5 - VALIDATION OF PRICE

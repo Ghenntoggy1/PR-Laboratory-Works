@@ -4,11 +4,11 @@ import pika
 import os
 from ftplib import FTP
 
-from Prerequisites.Phone import PhoneEntity
-from Prerequisites.UrllibHTMLRequester import UrllibHTMLRequester
-from Prerequisites.Scraper_utils import get_phones_html, get_phone_from_html, \
+from Prerequisites.ScraperUtils.Phone import PhoneEntity
+from Prerequisites.ScraperUtils.UrllibHTMLRequester import UrllibHTMLRequester
+from Prerequisites.ScraperUtils.Scraper_utils import get_phones_html, get_phone_from_html, \
     process_phones
-from Prerequisites.PhoneEntityProcessor import serialize_phone_JSON
+from Prerequisites.ScraperUtils.PhoneEntityProcessor import serialize_phone_JSON
 
 load_dotenv(dotenv_path="../.env")
 
@@ -88,15 +88,9 @@ def upload_to_ftp(file_path: str):
 if __name__ == '__main__':
     rabbit_mq = Thread(target=scrape_send_to_rabbit_mq)
     ftp_server = Thread(target=scrape_send_to_ftp())
-    # consumer_rabbit_mq = Thread(target=Consumer.consume_from_rabbit_mq)
-    # consumer_ftp = Thread(target=Consumer.consume_file_from_ftp)
 
     rabbit_mq.start()
     ftp_server.start()
-    # consumer_rabbit_mq.start()
-    # consumer_ftp.start()
 
     rabbit_mq.join()
     ftp_server.join()
-    # consumer_rabbit_mq.join()
-    # consumer_ftp.join()

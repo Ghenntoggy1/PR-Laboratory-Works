@@ -1,5 +1,5 @@
-from Constants import Constants
-from Phone import Price
+from .Constants import Constants
+from .Phone import Price
 
 
 def construct_price_currency(price: float, currency: str) -> Price:

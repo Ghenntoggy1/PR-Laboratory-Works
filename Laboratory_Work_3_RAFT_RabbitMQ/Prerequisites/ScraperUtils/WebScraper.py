@@ -2,7 +2,7 @@
 from abc import abstractmethod, ABC
 from typing import Union
 
-from Constants import Constants
+from .Constants import Constants
 from bs4 import BeautifulSoup, PageElement
 
 
