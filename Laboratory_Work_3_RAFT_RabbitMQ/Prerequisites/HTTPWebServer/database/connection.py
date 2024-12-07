@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path="../.env")
+load_dotenv(dotenv_path=".env")
 
 # IF RUN FROM PYCHARM
 # load_dotenv(dotenv_path=".env")
@@ -20,7 +20,7 @@ DATABASE_CONTAINER_NAME = os.getenv("DATABASE_CONTAINER_NAME")
 DATABASE_NAME = os.getenv("DATABASE_NAME")
 DATABASE_PORT = os.getenv("DATABASE_PORT")
 # DATABASE_CONNECTION_URL = f"postgresql+psycopg2://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{DATABASE_CONTAINER_NAME}:{DATABASE_PORT}/{DATABASE_NAME}"
-DATABASE_CONNECTION_URL = f"postgresql+psycopg2://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{DATABASE_CONTAINER_NAME}:5432/{DATABASE_NAME}"
+DATABASE_CONNECTION_URL = f"postgresql+psycopg2://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@localhost:5454/{DATABASE_NAME}"
 
 # Create the database engine using the connection URL - to Docker container
 # Engine is factory that can create new database connections for us, which also holds onto connections inside of a

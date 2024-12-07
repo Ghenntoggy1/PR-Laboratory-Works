@@ -20,6 +20,12 @@ FTP_CONTAINER_NAME = os.getenv("FTP_CONTAINER_NAME")
 RABBIT_MQ_CONTAINER_NAME = os.getenv("RABBIT_MQ_CONTAINER_NAME")
 
 
+http_leader_host = ""
+http_leader_port = 0
+
+def udp_handler():
+    pass
+
 def connect_to_rabbit_mq() -> tuple:
     credentials = pika.PlainCredentials(RABBIT_MQ_USERNAME, RABBIT_MQ_PASSWORD)
     parameters = pika.ConnectionParameters(RABBIT_MQ_CONTAINER_NAME, 5672, '/', credentials)
