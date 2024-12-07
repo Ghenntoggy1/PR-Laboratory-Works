@@ -165,4 +165,8 @@ cython_debug/
 Laboratory_Work_2_HTTP_Server_CRUD/.env
 Laboratory_Work_2_HTTP_Server_CRUD/.dockerignore
 
-Laboratory_Work_3_RAFT_RabbitMQ/data/
+Laboratory_Work_3_RAFT_RabbitMQ/ftp_data/
+Laboratory_Work_3_RAFT_RabbitMQ/.env
+Laboratory_Work_3_RAFT_RabbitMQ/Prerequisites/SMTP/.env
+Laboratory_Work_3_RAFT_RabbitMQ/Prerequisites/HTTPWebServer/.env
+Laboratory_Work_3_RAFT_RabbitMQ/TEST.txt
