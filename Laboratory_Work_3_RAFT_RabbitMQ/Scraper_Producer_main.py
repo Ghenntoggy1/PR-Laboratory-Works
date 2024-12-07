@@ -9,6 +9,7 @@ from Prerequisites.ScraperUtils.UrllibHTMLRequester import UrllibHTMLRequester
 from Prerequisites.ScraperUtils.Scraper_utils import get_phones_html, get_phone_from_html, \
     process_phones
 from Prerequisites.ScraperUtils.PhoneEntityProcessor import serialize_phone_JSON
+from Prerequisites.ScraperUtils.Constants import Constants
 
 load_dotenv(dotenv_path="../.env")
 
@@ -35,11 +36,11 @@ def connect_to_rabbit_mq():
 
 def scrape_send_to_rabbit_mq():
     channel = connect_to_rabbit_mq()
-    urllib_web_scraper: UrllibHTMLRequester = UrllibHTMLRequester()
+    urllib_web_scraper: UrllibHTMLRequester = UrllibHTMLRequester(url=Constants.URL_WEBSITE_2)
     phones_html = get_phones_html(urllib_web_scraper)
     for phone_html in phones_html:
         phone: PhoneEntity = get_phone_from_html(urllib_web_scraper, phone_html)
-        # print(get_phone_from_html(urllib_web_scraper, phone_html))
+        print(get_phone_from_html(urllib_web_scraper, phone_html))
         phone_json_serialized = serialize_phone_JSON(phone.to_dict())
         """
         Publish a message to the exchange with the specified routing key. The exchange will automatically route the
@@ -52,18 +53,19 @@ def scrape_send_to_rabbit_mq():
     channel.close()
 
 def scrape_send_to_ftp():
-    urllib_web_scraper: UrllibHTMLRequester = UrllibHTMLRequester()
+    urllib_web_scraper: UrllibHTMLRequester = UrllibHTMLRequester(url=Constants.URL_WEBSITE)
     phones_html = get_phones_html(urllib_web_scraper)
     phone_dicts = []
     for phone_html in phones_html:
         phone: PhoneEntity = get_phone_from_html(urllib_web_scraper, phone_html)
         phone_dicts.append(phone)
+        # print(phone)
     processed_phones: list[PhoneEntity] = process_phones(min_price=400, max_price=600, new_currency="EUR", phones=phone_dicts).filtered_phones
     processed_phones_dicts: list[dict] = [phone_entity.to_dict() for phone_entity in processed_phones]
     phones_json = serialize_phone_JSON(processed_phones_dicts)
-    output_file_path = "data/phones.json"
-    if not os.path.exists("data"):
-        os.makedirs("data")
+    output_file_path = "ftp_data/phones.json"
+    if not os.path.exists("ftp_data"):
+        os.makedirs("ftp_data")
     if os.path.exists(output_file_path):
         os.remove(output_file_path)
     with open(output_file_path, "wb") as file:
@@ -87,7 +89,7 @@ def upload_to_ftp(file_path: str):
 
 if __name__ == '__main__':
     rabbit_mq = Thread(target=scrape_send_to_rabbit_mq)
-    ftp_server = Thread(target=scrape_send_to_ftp())
+    ftp_server = Thread(target=scrape_send_to_ftp)
 
     rabbit_mq.start()
     ftp_server.start()

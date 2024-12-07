@@ -7,7 +7,7 @@ import os
 
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path="../.env")
+load_dotenv(dotenv_path=".env")
 
 RABBIT_MQ_USERNAME = os.getenv("RABBIT_MQ_USERNAME")
 RABBIT_MQ_PASSWORD = os.getenv("RABBIT_MQ_PASSWORD")
@@ -16,10 +16,14 @@ FTP_PASSWORD = os.getenv("FTP_PASSWORD")
 FTP_HOST = os.getenv("FTP_HOST")
 FTP_PORT = int(os.getenv("FTP_PORT"))
 FTP_DATA_DIRECTORY = os.getenv("FTP_DATA_DIRECTORY")
+FTP_CONTAINER_NAME = os.getenv("FTP_CONTAINER_NAME")
+RABBIT_MQ_CONTAINER_NAME = os.getenv("RABBIT_MQ_CONTAINER_NAME")
+
 
 def connect_to_rabbit_mq() -> tuple:
     credentials = pika.PlainCredentials(RABBIT_MQ_USERNAME, RABBIT_MQ_PASSWORD)
-    parameters = pika.ConnectionParameters('localhost', 5672, '/', credentials)
+    parameters = pika.ConnectionParameters(RABBIT_MQ_CONTAINER_NAME, 5672, '/', credentials)
+    print(parameters)
     connection = pika.BlockingConnection(parameters)
 
     channel = connection.channel()
@@ -61,14 +65,14 @@ def consume_from_rabbit_mq():
     channel.start_consuming()
 
 def consume_file_from_ftp():
-    output_file_path = "data/phones_ftp.json"
+    output_file_path = "ftp_data/phones_ftp.json"
     while True:
         print("WAITING FOR FILE")
         time.sleep(10)
         print("READY TO CONSUME FILE")
-        if not os.path.exists("data"):
-            os.makedirs("data")
-        ftp = FTP(host=FTP_HOST)
+        if not os.path.exists("ftp_data"):
+            os.makedirs("ftp_data")
+        ftp = FTP(host=FTP_CONTAINER_NAME)
         ftp.login(user=FTP_USERNAME,
                   passwd=FTP_PASSWORD)
         if FTP_DATA_DIRECTORY not in ftp.nlst():

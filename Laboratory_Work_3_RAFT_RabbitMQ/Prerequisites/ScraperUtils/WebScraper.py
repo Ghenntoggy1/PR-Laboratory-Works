@@ -7,8 +7,8 @@ from bs4 import BeautifulSoup, PageElement
 
 
 class WebScraper(ABC):
-    def __init__(self):
-        self.url = Constants.URL_WEBSITE
+    def __init__(self, url: str = Constants.URL_WEBSITE):
+        self.url = url
 
     @abstractmethod
     def create_request(self, custom_url: str, custom_headers: dict):

@@ -5,8 +5,12 @@ from typing import Union
 from fastapi import APIRouter, Depends, status, Response, UploadFile, File
 from sqlalchemy.orm import Session
 
+# from ..database.connection import get_db
+# from ..schemas.PhoneModel import PhoneModel, PhoneModelDTO
+# from ..schemas.PriceModel import PriceModel
+# from ..models.PhoneTable import PhoneTableModel
+# from ..models.PriceTable import PriceTableModel
 from database.connection import get_db
-
 from schemas.PhoneModel import PhoneModel, PhoneModelDTO
 from schemas.PriceModel import PriceModel
 from models.PhoneTable import PhoneTableModel

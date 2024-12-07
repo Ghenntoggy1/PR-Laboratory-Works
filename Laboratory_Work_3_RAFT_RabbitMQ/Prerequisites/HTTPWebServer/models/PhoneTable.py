@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
+# from ..database.connection import Base, engine
 from database.connection import Base, engine
 
 

@@ -1,0 +1,81 @@
+name: lab_3
+services:
+  postgres:
+    image: postgres:latest
+    container_name: ${DATABASE_CONTAINER_NAME}
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5454:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  ftp_server:
+    image: stilliard/pure-ftpd:hardened
+    container_name: ftp_server
+    ports:
+      - "21:21"
+      - "30000-30009:30000-30009" # Passive ports for FTP
+    environment:
+      FTP_USER_NAME: testuser # FTP username
+      FTP_USER_PASS: testpass # FTP password
+      FTP_USER_HOME: / home / testuser # FTP user home directory
+    volumes:
+      - ./ftp_data:/home/testuser # Map local directory to FTP home
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: iepure_MQ
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  fastapi_http_udp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${FASTAPI_HTTP_UDP_CONTAINER_NAME}
+    env_file:
+      - .env
+    environment:
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_CONTAINER_NAME: ${DATABASE_CONTAINER_NAME}
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+    depends_on:
+      - postgres
+  intermediary_server_consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile_Consumer
+    container_name: intermediary_server_consumer
+    env_file:
+      - .env
+    environment:
+      RABBIT_MQ_USERNAME: ${RABBIT_MQ_USERNAME}
+      RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
+      RABBIT_MQ_HOST: ${RABBIT_MQ_CONTAINER_NAME}
+      FTP_USERNAME: ${FTP_USERNAME}
+      FTP_PASSWORD: ${FTP_PASSWORD}
+      FTP_HOST: ${FTP_HOST}
+      FTP_PORT: ${FTP_PORT}
+      FTP_DATA_DIRECTORY: ${FTP_DATA_DIRECTORY}
+    ports:
+      - "9000:9000"
+    depends_on:
+      - postgres
+      - rabbitmq
+      - fastapi_http_udp
+      - ftp_server
+volumes:
+  postgres_data:

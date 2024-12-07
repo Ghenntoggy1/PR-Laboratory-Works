@@ -1,7 +1,8 @@
 from sqlalchemy import Column, Integer, Float, String
 
-from database.connection import Base, engine
+# from ..database.connection import Base, engine
 
+from database.connection import Base, engine
 
 # From connection import Base that is the base model for ORM models.
 class PriceTableModel(Base):
