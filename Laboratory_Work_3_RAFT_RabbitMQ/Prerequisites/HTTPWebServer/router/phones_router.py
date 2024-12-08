@@ -128,10 +128,9 @@ def post_phones(phones: list[PhoneModel],
 def post_phones_from_json(response: Response,
                           phones_json: UploadFile = File(...),
                           db: Session = Depends(get_db)):
-    if phones_json.content_type != "application/json":
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        return {"message": "File must be a JSON file", "status_code": str(response.status_code)}
-
+    # if phones_json.content_type != "application/json":
+    #     response.status_code = status.HTTP_400_BAD_REQUEST
+    #     return {"message": "File must be a JSON file", "status_code": str(response.status_code)}
     try:
         file_content = phones_json.file.read()
         phones_data = json.loads(file_content)
@@ -173,7 +172,7 @@ def post_phones_from_json(response: Response,
         db.commit()
 
     response_message = {
-        'message': 'Added multiple phones' if valid_phones else 'No valid prices added',
+        'message': 'Added multiple phones' if valid_phones else 'No valid phones added',
         'valid_phones': valid_phones,
         'invalid_phones': invalid_phones,
         'Status Code': status.HTTP_201_CREATED if valid_phones else status.HTTP_400_BAD_REQUEST

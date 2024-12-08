@@ -9,5 +9,6 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 COPY Consumer.py /app
 
 EXPOSE 9000
+EXPOSE 12345
 
 CMD ["python", "-u", "Consumer.py"]

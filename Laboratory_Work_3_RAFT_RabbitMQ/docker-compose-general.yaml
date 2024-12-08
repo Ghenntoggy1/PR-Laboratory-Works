@@ -13,7 +13,8 @@ services:
       - "5454:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+#    networks:
+#      - lab_3
   ftp_server:
     image: stilliard/pure-ftpd:hardened
     container_name: ftp_server
@@ -26,22 +27,28 @@ services:
       FTP_USER_HOME: / home / testuser # FTP user home directory
     volumes:
       - ./ftp_data:/home/testuser # Map local directory to FTP home
-
+#    networks:
+#      - lab_3
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: iepure_MQ
     ports:
       - "5672:5672"
       - "15672:15672"
-
+#    networks:
+#      - lab_3
   fastapi_http_udp:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ${FASTAPI_HTTP_UDP_CONTAINER_NAME}
+    container_name: fastapi_http_udp
     env_file:
       - .env
     environment:
+      CONSUMER_SERVER_HOST: ${CONSUMER_CONTAINER_HOST}
+      CONSUMER_SERVER_PORT: ${CONSUMER_CONTAINER_PORT}
+      HTTP_SERVER_GLOBAL_PORT: ${HTTP_SERVER_GLOBAL_PORT}
+      UDP_SERVER_GLOBAL_PORT: ${UDP_SERVER_GLOBAL_PORT}
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
@@ -49,11 +56,14 @@ services:
       DATABASE_PORT: ${DATABASE_PORT}
       DATABASE_CONTAINER_NAME: ${DATABASE_CONTAINER_NAME}
     ports:
-      - "8000:8000"
-      - "8001:8001"
-      - "8002:8002"
+      - "8000-8002:8000-8002"
+      - "3000-3005:3000-3005"
     depends_on:
       - postgres
+      - intermediary_server_consumer
+#    networks:
+#      - lab_3
+
   intermediary_server_consumer:
     build:
       context: .
@@ -72,11 +82,14 @@ services:
       FTP_DATA_DIRECTORY: ${FTP_DATA_DIRECTORY}
     ports:
       - "9000:9000"
+      - "3500:3500"
     depends_on:
       - postgres
       - rabbitmq
-      - fastapi_http_udp
       - ftp_server
+#    networks:
+#      - lab_3
+
   smtp_server:
     build:
       context: .
@@ -89,5 +102,12 @@ services:
       SMTP_GMAIL_PORT: ${SMTP_GMAIL_PORT}
     ports:
       - "10000:10000"
+#    networks:
+#      - lab_3
+
+#networks:
+#  lab_3:
+#    driver: bridge
+#
 volumes:
   postgres_data:
