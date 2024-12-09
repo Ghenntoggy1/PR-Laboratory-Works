@@ -57,7 +57,7 @@ def connect_to_rabbit_mq() -> tuple:
     time.sleep(10)
     credentials = pika.PlainCredentials(RABBIT_MQ_USERNAME, RABBIT_MQ_PASSWORD)
     parameters = pika.ConnectionParameters(RABBIT_MQ_CONTAINER_NAME, 5672, '/', credentials)
-    print(parameters)
+    # print(parameters)
     connection = pika.BlockingConnection(parameters)
 
     channel = connection.channel()
@@ -89,7 +89,6 @@ def connect_to_rabbit_mq() -> tuple:
 def callback(channel, method, properties, body):
     print(f" [x] {body}")
     channel.basic_ack(delivery_tag=method.delivery_tag)
-    # Simulate delay
     with lock:
         print(json.loads(body))
         response = requests.post(
@@ -112,7 +111,7 @@ def consume_file_from_ftp():
     output_file_path = "ftp_data/phones_ftp.json"
     while True:
         print("WAITING FOR FILE")
-        time.sleep(10)
+        time.sleep(30)
         print("READY TO CONSUME FILE")
         if not os.path.exists("ftp_data"):
             os.makedirs("ftp_data")

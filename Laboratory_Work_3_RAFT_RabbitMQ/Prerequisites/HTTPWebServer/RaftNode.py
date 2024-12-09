@@ -216,9 +216,8 @@ class RaftNode:
         self.is_leader = True
         print(f"Node {self.udp_client_host}:{self.udp_client_port} became leader for term {self.current_term}")
 
-        # Send to Intermediary Server that this node is a leader
+        # COMMUNICATION WITH THE INTERMEDIARY SERVER CONSUMER - SEND ITSELF AS LEADER NODE
         print(f"Node {self.udp_client_host}:{self.udp_client_port} sending leader message to intermediary server")
-
         consumer_addr = (CONSUMER_SERVER_HOST, int(CONSUMER_SERVER_PORT))
         self.udp_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         print(f"Sending message to {consumer_addr}")
@@ -227,8 +226,6 @@ class RaftNode:
             'node': f"{self.http_server_host}:{self.http_server_port}"
         }
         self.udp_client.sendto(json.dumps(message).encode(), (CONSUMER_SERVER_HOST, int(CONSUMER_SERVER_PORT)))
-        # Verify
-        print(f"@Node {self.udp_client_host}:{self.udp_client_port} sending leader message to intermediary server")
         self.start_heartbeat()
 
     def start_heartbeat(self):
